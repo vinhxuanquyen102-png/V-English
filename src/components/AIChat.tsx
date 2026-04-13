@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Brain, Send, Loader2, Sparkles } from 'lucide-react';
 import { AISettings, AppState } from '../types';
 import { GoogleGenAI } from "@google/genai";
+import ReactMarkdown from 'react-markdown';
 
 interface AIChatProps {
   isOpen: boolean;
@@ -23,9 +24,11 @@ export function AIChat({ isOpen, onClose, aiSettings, state }: AIChatProps) {
 
   useEffect(() => {
     if (messages.length === 0) {
-      let initialMessage = 'Chào bạn! Mình là trợ lý học tập AI. Bạn có thắc mắc gì về ngữ pháp, từ vựng hay muốn luyện tập gì không?';
+      let initialMessage = `**1. Input:** Welcome to your daily training! Today we will talk about your daily routine at work. A daily routine helps you stay organized and productive. For example, I usually start my day by checking emails and planning my tasks.
+
+**2. Question:** What is the first thing you usually do when you arrive at work? Please answer in English.`;
       if (wordsToReview > 0) {
-        initialMessage = `Chào bạn! Hôm nay bạn có **${wordsToReview} từ vựng** cần ôn tập đấy. Hãy vào phần "Ôn tập SRS" để học nhé! Bạn cần mình giúp gì thêm không?`;
+        initialMessage = `Chào bạn! Hôm nay bạn có **${wordsToReview} từ vựng** cần ôn tập. Hãy hoàn thành phần "Ôn tập SRS" trước nhé. Sau đó, chúng ta sẽ bắt đầu bài học mới. Bạn đã sẵn sàng chưa?`;
       }
       setMessages([{ role: 'ai', content: initialMessage }]);
     }
@@ -48,14 +51,57 @@ export function AIChat({ isOpen, onClose, aiSettings, state }: AIChatProps) {
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const contextPrompt = `
-        You are an expert English learning assistant. Help the user with their English learning journey. Keep responses concise, encouraging, and helpful.
+        Bạn là AI Language Coach + Learning Engine. Bạn KHÔNG phải chatbot. Bạn là hệ thống đào tạo.
+        Mục tiêu: Đưa người học từ A2 → B2 trong 90 ngày.
+
         User Context:
-        - Level: ${state.userLevel || 'Unknown'}
+        - Trình độ hiện tại: ${state.userLevel || 'A2'}
         - Current Week: ${state.currentWeek}, Day: ${state.currentDay}
-        - XP: ${state.xp}
-        - Streak: ${state.streak} days
-        - Words to review today: ${wordsToReview}
-        
+        - XP: ${state.xp}, Streak: ${state.streak} days
+
+        ⚠️ NGUYÊN TẮC BẮT BUỘC:
+        Mỗi phiên học phải có đầy đủ: INPUT → OUTPUT → FEEDBACK → REPEAT → CHALLENGE. Không được bỏ qua bước nào.
+
+        🧠 FLOW MỖI LẦN TƯƠNG TÁC:
+
+        Nếu đây là tin nhắn đầu tiên hoặc bắt đầu chủ đề mới, hãy đưa ra INPUT và QUESTION:
+        1. INPUT: Đưa 1 đoạn ngắn (≤120 từ), đúng level A2–B2, chủ đề công việc/giao tiếp.
+        2. QUESTION: Hỏi 1 câu kiểm tra hiểu. Yêu cầu user trả lời bằng tiếng Anh (OUTPUT).
+
+        Nếu user đã trả lời (OUTPUT), hãy đưa ra FEEDBACK, REPEAT và CHALLENGE:
+        3. FEEDBACK (Coaching Box - Tiếng Việt):
+           - Correction: sửa lỗi
+           - WHY: giải thích vì sao sai (ngắn gọn)
+           - Upgrade: nâng cấp câu lên mức B2
+           - Pattern: chỉ ra lỗi lặp nếu có
+        4. REPEAT: Yêu cầu user viết lại câu đã sửa. Nếu user không làm → nhắc lại.
+        5. CHALLENGE: Tạo câu hỏi khó hơn, ép dùng từ mới hoặc cấu trúc vừa học.
+
+        📊 TRACKING & ĐIỀU CHỈNH:
+        - Ghi nhớ lỗi grammar và từ yếu. Nếu lỗi lặp lại ≥ 3 lần, tạo mini exercise riêng.
+        - Nếu user trả lời tốt: tăng complexity (câu dài hơn, linking words).
+        - Nếu user yếu: giảm độ khó.
+
+        🚫 CẤM:
+        - Không chỉ chat phiếm.
+        - Không giải thích dài dòng.
+        - Không bỏ bước REPEAT.
+
+        OUTPUT FORMAT (Tuân thủ nghiêm ngặt):
+        [Khi đưa bài mới]
+        **1. Input:** [Đoạn văn]
+        **2. Question:** [Câu hỏi]
+        *(Đợi user trả lời)*
+
+        [Khi phản hồi user]
+        **4. Feedback:**
+        - Correction: ...
+        - WHY: ...
+        - Upgrade: ...
+        - Pattern: ...
+        **5. Repeat:** [Yêu cầu viết lại]
+        **6. Challenge:** [Câu hỏi thử thách]
+
         User message: ${input}
       `;
       const response = await ai.models.generateContent({
@@ -86,7 +132,13 @@ export function AIChat({ isOpen, onClose, aiSettings, state }: AIChatProps) {
           <div className="space-y-4">
             {messages.map((m, i) => (
               <div key={i} className={`p-3 rounded-xl max-w-[85%] ${m.role === 'user' ? 'bg-primary text-white ml-auto' : 'bg-muted'}`}>
-                {m.content}
+                {m.role === 'ai' ? (
+                  <div className="markdown-body text-sm">
+                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  m.content
+                )}
               </div>
             ))}
             {loading && <div className="p-3 rounded-xl bg-muted w-16"><Loader2 className="animate-spin" /></div>}

@@ -117,7 +117,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-400">
+          <h1 className="text-3xl font-bold font-heading text-slate-900 dark:text-white tracking-tight">
             Xin chào, Người học! 👋
           </h1>
           <p className="text-muted-foreground font-medium mt-1">Lộ trình từ A2 lên B1 của bạn đang tiến triển rất tốt.</p>
@@ -140,7 +140,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
       </div>
 
       {/* 12-Week Interactive Timeline */}
-      <Card className="bg-white/80 dark:bg-white/10 backdrop-blur-md border-white/20 shadow-xl overflow-hidden">
+      <Card className="shadow-sm border-border">
         <CardContent className="p-6">
           <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
             <Target className="w-5 h-5 text-indigo-500" />
@@ -197,7 +197,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
           {/* Motivation Stats */}
           <div className="grid grid-cols-3 gap-4">
             <motion.div whileHover={{ y: -5 }}>
-              <Card className="bg-white/80 dark:bg-white/10 backdrop-blur-md border-white/20 shadow-xl overflow-hidden relative group">
+              <Card className="shadow-sm border-border relative group overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <CardContent className="p-6 flex flex-col items-center text-center gap-3">
                   <div className="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-500 flex items-center justify-center shadow-inner">
@@ -212,7 +212,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
             </motion.div>
 
             <motion.div whileHover={{ y: -5 }}>
-              <Card className="bg-white/80 dark:bg-white/10 backdrop-blur-md border-white/20 shadow-xl overflow-hidden relative group">
+              <Card className="shadow-sm border-border relative group overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <CardContent className="p-6 flex flex-col items-center text-center gap-3">
                   <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-500 flex items-center justify-center shadow-inner">
@@ -227,7 +227,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
             </motion.div>
 
             <motion.div whileHover={{ y: -5 }}>
-              <Card className="bg-white/80 dark:bg-white/10 backdrop-blur-md border-white/20 shadow-xl overflow-hidden relative group">
+              <Card className="shadow-sm border-border relative group overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <CardContent className="p-6 flex flex-col items-center text-center gap-3">
                   <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center shadow-inner">
@@ -243,7 +243,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
           </div>
 
           {/* Daily Mission */}
-          <Card className="bg-white/80 dark:bg-white/10 backdrop-blur-md border-white/20 shadow-xl">
+          <Card className="shadow-sm border-border">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-xl font-bold flex items-center gap-2">
@@ -316,7 +316,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
         <div className="space-y-8">
           
           {/* Radar Chart */}
-          <Card className="bg-white/80 dark:bg-white/10 backdrop-blur-md border-white/20 shadow-xl">
+          <Card className="shadow-sm border-border">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-indigo-500" />
@@ -344,7 +344,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
 
           {/* Vocabulary Quick Access */}
           <Card 
-            className="bg-white/80 dark:bg-white/10 backdrop-blur-md border-white/20 shadow-xl overflow-hidden relative group cursor-pointer hover:border-blue-500/50 transition-all"
+            className="shadow-sm border-border overflow-hidden relative group cursor-pointer hover:border-blue-500/50 transition-all"
             onClick={() => setShowVocabBank(true)}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent"></div>
@@ -398,7 +398,7 @@ export function Dashboard({ state, onSelectLesson, onRemoveTip, onExport, onImpo
           </Card>
 
           {/* Mock Leaderboard */}
-          <Card className="bg-white/80 dark:bg-white/10 backdrop-blur-md border-white/20 shadow-xl">
+          <Card className="shadow-sm border-border">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Award className="w-5 h-5 text-yellow-500" />

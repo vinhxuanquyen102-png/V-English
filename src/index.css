@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: "Outfit", var(--font-sans);
+    --font-heading: "Plus Jakarta Sans", var(--font-sans);
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
     --color-sidebar-ring: var(--sidebar-ring);
@@ -138,4 +138,32 @@
 
 .animate-shake {
   animation: shake 0.2s ease-in-out 0s 2;
+}
+
+.markdown-body {
+  @apply space-y-2;
+}
+
+.markdown-body p {
+  @apply leading-relaxed;
+}
+
+.markdown-body ul {
+  @apply list-disc list-inside space-y-1;
+}
+
+.markdown-body ol {
+  @apply list-decimal list-inside space-y-1;
+}
+
+.markdown-body strong {
+  @apply font-bold text-slate-900 dark:text-white;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
+  @apply font-bold font-heading text-slate-900 dark:text-white mt-4 mb-2;
+}
+
+.markdown-body blockquote {
+  @apply border-l-4 border-primary/50 pl-4 italic text-muted-foreground;
 }
