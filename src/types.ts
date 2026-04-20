@@ -1,4 +1,6 @@
-export type SkillType = 'Listening' | 'Speaking' | 'Reading' | 'Writing' | 'Grammar' | 'Vocabulary' | 'Grammar & Reading';
+export type SkillType = 'Listening' | 'Speaking' | 'Reading' | 'Writing' | 'Grammar' | 'Vocabulary' | 'Grammar & Reading' | 'General';
+
+export type RecallMode = 'recognition' | 'production';
 
 export interface MemoryHack {
   type: 'Visual' | 'Story' | 'Rhyme' | 'Hook';
@@ -16,7 +18,7 @@ export interface Question {
 
 export interface Exercise {
   id: string;
-  type: 'shadowing' | 'writing' | 'speaking' | 'reading' | 'quiz';
+  type: 'shadowing' | 'writing' | 'speaking' | 'reading' | 'quiz' | 'listening';
   title: string;
   content?: string;
   audioText?: string;
@@ -48,11 +50,13 @@ export interface Flashcard {
   cefr: 'A2' | 'B1';
   ipa?: string;
   partOfSpeech?: string;
-  synonyms?: string[];
-  antonyms?: string[];
+  synonyms?: any[];
+  antonyms?: any[];
   examples?: string[];
   sourceLesson?: string;
   sourceSentence?: string;
+  notes?: string;
+  linkedWordIds?: string[];
   nextReview: string; // ISO date
   interval: number; // days
   easeFactor: number;
@@ -85,8 +89,24 @@ export interface Badge {
   unlockedAt: string;
 }
 
+export interface ErrorRecord {
+  id: string;
+  pattern: string;
+  count: number;
+  examples: string[];
+  lastSeen: string;
+}
+
+export interface ErrorStats {
+  tense: number;
+  preposition: number;
+  article: number;
+  wordChoice: number;
+}
+
 export interface AppState {
-  userLevel: 'A1' | 'A2' | 'B1' | 'B2' | null;
+  userLevel: 'A1' | 'A2' | 'A2+' | 'B1' | 'B2' | null;
+  difficultyLevel: 'easy' | 'medium' | 'hard';
   currentWeek: number;
   currentDay: number;
   completedLessons: string[]; // lesson ids
@@ -100,6 +120,8 @@ export interface AppState {
   streakShields: number;
   lastCompletedDate: string | null;
   feedbackLog: FeedbackLog[];
+  errorLog: ErrorRecord[];
+  errorStats: ErrorStats;
   difficultyMultiplier: number;
   reviewDaysRemaining: number;
   bonusChallengesUnlocked: string[];

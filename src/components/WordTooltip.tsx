@@ -59,7 +59,7 @@ export function WordTooltip({ word, settings, children }: WordTooltipProps) {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute z-[100] bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-4 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border-2 border-primary/20 pointer-events-none"
+            className="absolute z-[100] bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-4 bg-card rounded-xl shadow-sm border border-border pointer-events-none"
           >
             {loading ? (
               <div className="flex items-center justify-center py-4">
@@ -67,14 +67,14 @@ export function WordTooltip({ word, settings, children }: WordTooltipProps) {
               </div>
             ) : data ? (
               <div className="space-y-3">
-                <div className="border-b pb-2 flex justify-between items-start">
+                <div className="border-b border-border pb-2 flex justify-between items-start">
                   <div>
-                    <p className="text-xs font-bold uppercase text-primary tracking-widest mb-1">Nghĩa tiếng Việt</p>
-                    <p className="text-lg font-bold font-heading text-slate-800 dark:text-white">{data.vietnamese}</p>
+                    <p className="text-[10px] font-semibold uppercase text-primary tracking-widest mb-1">Nghĩa tiếng Việt</p>
+                    <p className="text-lg font-semibold text-foreground">{data.vietnamese}</p>
                   </div>
                   <button 
                     onClick={playPronunciation}
-                    className="p-2 hover:bg-primary/10 rounded-full text-primary transition-colors pointer-events-auto"
+                    className="p-2 hover:bg-muted rounded-full text-primary transition-colors pointer-events-auto"
                     title="Nghe phát âm"
                   >
                     <Volume2 className="w-4 h-4" />
@@ -82,18 +82,18 @@ export function WordTooltip({ word, settings, children }: WordTooltipProps) {
                 </div>
                 
                 <div>
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest mb-1">Giải thích</p>
-                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400 leading-snug">
+                  <p className="text-[10px] font-semibold uppercase text-muted-foreground tracking-widest mb-1">Giải thích</p>
+                  <p className="text-sm font-medium text-muted-foreground leading-snug">
                     {data.explanation}
                   </p>
                 </div>
 
                 {data.contexts.length > 0 && (
                   <div>
-                    <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest mb-1">Ngữ cảnh sử dụng</p>
+                    <p className="text-[10px] font-semibold uppercase text-muted-foreground tracking-widest mb-1">Ngữ cảnh sử dụng</p>
                     <ul className="space-y-1">
                       {data.contexts.map((ctx, i) => (
-                        <li key={i} className="text-[11px] italic text-slate-500 dark:text-slate-500 leading-tight">
+                        <li key={i} className="text-[11px] italic text-muted-foreground leading-tight">
                           • {ctx}
                         </li>
                       ))}
@@ -106,7 +106,7 @@ export function WordTooltip({ word, settings, children }: WordTooltipProps) {
             )}
             
             {/* Arrow */}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white dark:border-t-slate-900" />
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-border" />
           </motion.div>
         )}
       </AnimatePresence>

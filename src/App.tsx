@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { AppState, Lesson } from './types';
+import { AppState, Lesson, Flashcard } from './types';
 import { CURRICULUM } from './data/curriculum';
 import { storage } from './lib/storage';
 import { PlacementTest } from './components/PlacementTest';
@@ -10,6 +10,7 @@ import { FlashcardReview } from './components/FlashcardReview';
 import { VocabQuiz } from './components/VocabQuiz';
 import { AIChat } from './components/AIChat';
 import { XPShop } from './components/XPShop';
+import { SettingsModal } from './components/SettingsModal';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
@@ -57,6 +58,14 @@ export default function App() {
   const [isExtraPractice, setIsExtraPractice] = useState(false);
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const [isXPShopOpen, setIsXPShopOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // Initialize difficultyLevel if missing
+  useEffect(() => {
+    if (!state.difficultyLevel) {
+      setState(prev => ({ ...prev, difficultyLevel: 'medium' }));
+    }
+  }, []);
 
   const handleBuyItem = (item: 'shield' | 'badge' | 'lesson', cost: number) => {
     setState(prev => {
@@ -175,6 +184,8 @@ export default function App() {
 
       // Feedback Log Logic
       const newFeedbackLog = [...prev.feedbackLog];
+      const newErrorStats = { ...prev.errorStats };
+
       if (aiResult) {
         const lesson = CURRICULUM.find(l => l.id === lessonId);
         if (lesson) {
@@ -187,6 +198,14 @@ export default function App() {
             feedback: aiResult.feedback,
             date: new Date().toISOString()
           });
+        }
+
+        // Aggregate Error Intelligence
+        if (aiResult.errorTypes) {
+          newErrorStats.tense += aiResult.errorTypes.tense || 0;
+          newErrorStats.preposition += aiResult.errorTypes.preposition || 0;
+          newErrorStats.article += aiResult.errorTypes.article || 0;
+          newErrorStats.wordChoice += aiResult.errorTypes.wordChoice || 0;
         }
       }
 
@@ -203,7 +222,8 @@ export default function App() {
         reviewDaysRemaining: newReviewDays,
         bonusChallengesUnlocked: newBonusChallenges,
         badges: newBadges,
-        feedbackLog: newFeedbackLog
+        feedbackLog: newFeedbackLog,
+        errorStats: newErrorStats
       };
     });
     setActiveLesson(null);
@@ -250,6 +270,13 @@ export default function App() {
     } else {
       toast.success('Đã lưu từ vựng vào Flashcard!');
     }
+  };
+
+  const handleUpdateFlashcard = (id: string, updates: Partial<Flashcard>) => {
+    setState(prev => ({
+      ...prev,
+      flashcards: prev.flashcards.map(f => f.id === id ? { ...f, ...updates } : f)
+    }));
   };
 
   const handleReviewFlashcard = (id: string, quality: number) => {
@@ -312,43 +339,80 @@ export default function App() {
     }
   };
 
+  const handleUpdateXP = (amount: number) => {
+    setState(prev => ({ ...prev, xp: prev.xp + amount }));
+  };
+
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
-        <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container flex h-16 items-center justify-between px-4 max-w-7xl mx-auto">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => { 
-              setActiveLesson(null); 
-              setIsReviewing(false); 
-              setIsQuizMode(false);
-              setIsExtraPractice(false);
-            }}>
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                <GraduationCap className="w-6 h-6" />
-              </div>
-              <span className="text-xl font-bold font-heading tracking-tighter">V-ENGLISH</span>
+      <div className="min-h-screen bg-background text-foreground transition-all duration-500 relative overflow-hidden selection:bg-primary/20 selection:text-primary">
+        {/* Animated Background Blobs */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.2, 1],
+              x: [0, 50, 0],
+              y: [0, 30, 0]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px]" 
+          />
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.3, 1],
+              x: [0, -40, 0],
+              y: [0, 60, 0]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 rounded-full blur-[120px]" 
+          />
+        </div>
+
+        {/* Global Navigation */}
+        <nav className="sticky top-0 z-40 w-full glass-card border-b px-6 py-4 flex justify-between items-center shadow-lg shadow-primary/5">
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => {
+            setActiveLesson(null);
+            setIsReviewing(false);
+            setIsQuizMode(false);
+            setIsExtraPractice(false);
+          }}>
+            <div className="p-2.5 bg-primary/10 rounded-2xl group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-sm">
+              <GraduationCap className="w-7 h-7 text-primary group-hover:text-white" />
             </div>
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-muted rounded-full text-sm font-bold">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                Tuần {state.currentWeek} • Ngày {state.currentDay}
-              </div>
-              <Button variant="outline" className="rounded-full font-bold text-yellow-600 border-yellow-200 bg-yellow-50 hover:bg-yellow-100 dark:bg-yellow-900/20 dark:border-yellow-900/50 dark:text-yellow-500" onClick={() => setIsXPShopOpen(true)}>
-                <Store className="w-4 h-4 mr-2" />
-                {state.xp} XP
+            <h1 className="text-2xl font-black font-heading tracking-tight flex items-center gap-1.5">
+              Lingo<span className="text-primary italic">AI</span>
+            </h1>
+          </div>
+          
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-muted/40 rounded-2xl border border-border/50 text-sm font-bold shadow-inner">
+               <span className="flex items-center gap-1.5 text-primary">
+                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                 Tuần {state.currentWeek}
+               </span>
+               <span className="text-muted-foreground opacity-30">|</span>
+               <span className="text-foreground">Ngày {state.currentDay}</span>
+            </div>
+            
+            <Button variant="outline" className="rounded-2xl font-black text-sm tracking-tight border-primary/20 bg-primary/5 hover:bg-primary/10 h-10 px-4 transition-all" onClick={() => setIsXPShopOpen(true)}>
+              <Store className="w-4 h-4 mr-2 text-primary" />
+              <span className="text-primary text-lg">{state.xp}</span> <span className="text-[10px] uppercase ml-1 opacity-60">XP</span>
+            </Button>
+            
+            <ThemeToggle />
+            
+            <div className="flex items-center gap-1 bg-muted/30 p-1 rounded-2xl border border-border/50">
+              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-card" onClick={() => setIsSettingsOpen(true)}>
+                <Settings className="w-5 h-5 text-muted-foreground" />
               </Button>
-              <ThemeToggle />
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Settings className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="w-5 h-5" />
+              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-card">
+                <User className="w-5 h-5 text-muted-foreground" />
               </Button>
             </div>
           </div>
         </nav>
 
-        <main className="container pb-20 max-w-7xl mx-auto">
+        <main className="container max-w-7xl mx-auto px-4 py-8 md:py-12 relative z-10">
           <AnimatePresence mode="wait">
             {!state.roadmapGenerated ? (
               <PlacementTest onComplete={handlePlacementComplete} />
@@ -380,6 +444,7 @@ export default function App() {
                 onComplete={handleLessonComplete}
                 onSaveTip={handleSaveTip}
                 onSaveFlashcard={handleSaveFlashcard}
+                allFlashcards={state.flashcards}
                 aiSettings={state.aiSettings}
               />
             ) : (
@@ -393,6 +458,8 @@ export default function App() {
                 onStartQuiz={() => setIsQuizMode(true)}
                 onRemoveFlashcard={handleRemoveFlashcard}
                 onSaveFlashcard={handleSaveFlashcard}
+                onUpdateFlashcard={handleUpdateFlashcard}
+                onUpdateXP={handleUpdateXP}
               />
             )}
           </AnimatePresence>
@@ -400,7 +467,7 @@ export default function App() {
 
         {/* AI Chat Floating Button */}
         <Button 
-          className="fixed bottom-6 left-6 z-50 rounded-full h-14 w-14 shadow-2xl bg-indigo-600 hover:bg-indigo-700"
+          className="fixed bottom-6 left-6 z-50 rounded-full h-14 w-14 shadow-sm bg-primary hover:bg-primary/90 text-primary-foreground"
           onClick={() => setIsAIChatOpen(!isAIChatOpen)}
         >
           <MessageCircle className="w-8 h-8" />
@@ -412,6 +479,8 @@ export default function App() {
           onClose={() => setIsAIChatOpen(false)} 
           aiSettings={state.aiSettings} 
           state={state}
+          onUpdateState={(newState) => setState(prev => ({ ...prev, ...newState }))}
+          onSaveFlashcard={handleSaveFlashcard}
         />
 
         {isXPShopOpen && (
@@ -421,6 +490,15 @@ export default function App() {
             onClose={() => setIsXPShopOpen(false)}
           />
         )}
+
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          settings={state.aiSettings}
+          difficultyLevel={state.difficultyLevel || 'medium'}
+          onSave={(newSettings, newDifficulty) => setState(prev => ({ ...prev, aiSettings: newSettings, difficultyLevel: newDifficulty }))}
+          onRetakePlacementTest={() => setState(prev => ({ ...prev, roadmapGenerated: false }))}
+        />
 
         <Toaster position="top-center" richColors />
       </div>

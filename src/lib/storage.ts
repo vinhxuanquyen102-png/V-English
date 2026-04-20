@@ -4,6 +4,7 @@ const STORAGE_KEY = 'v_english_state';
 
 const DEFAULT_STATE: AppState = {
   userLevel: null,
+  difficultyLevel: 'medium',
   currentWeek: 1,
   currentDay: 1,
   completedLessons: [],
@@ -22,6 +23,13 @@ const DEFAULT_STATE: AppState = {
   streakShields: 1,
   lastCompletedDate: null,
   feedbackLog: [],
+  errorLog: [],
+  errorStats: {
+    tense: 0,
+    preposition: 0,
+    article: 0,
+    wordChoice: 0,
+  },
   difficultyMultiplier: 1.0,
   reviewDaysRemaining: 0,
   bonusChallengesUnlocked: [],

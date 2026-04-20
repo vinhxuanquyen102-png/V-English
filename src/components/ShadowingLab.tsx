@@ -180,14 +180,14 @@ export function ShadowingLab({ text, onWordClick, onGrade, isGrading, feedback, 
       {/* Văn bản mẫu */}
       <div 
         ref={textContainerRef}
-        className="p-8 bg-slate-900 text-white rounded-2xl text-2xl font-bold leading-relaxed flex flex-wrap justify-center gap-x-2 gap-y-2"
+        className="p-8 bg-card rounded-xl text-2xl font-semibold leading-relaxed flex flex-wrap justify-center gap-x-2 gap-y-2 border border-border"
       >
         {words.map((word, i) => (
           <WordTooltip key={i} word={word} settings={aiSettings}>
             <span 
               ref={el => { wordRefs.current[i] = el; }}
               className={`mx-1 transition-colors cursor-pointer ${
-                currentWordIndex === i ? 'text-yellow-400 font-bold scale-110 inline-block' : 'hover:text-primary'
+                currentWordIndex === i ? 'text-primary font-semibold scale-110 inline-block' : 'hover:text-primary'
               }`}
               onClick={() => onWordClick(word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""))}
             >
@@ -198,7 +198,7 @@ export function ShadowingLab({ text, onWordClick, onGrade, isGrading, feedback, 
       </div>
 
       {/* Bộ điều khiển */}
-      <div className="flex flex-col items-center gap-6 bg-muted/30 p-6 rounded-2xl border-2 border-muted relative overflow-hidden">
+      <div className="flex flex-col items-center gap-6 bg-muted p-6 rounded-xl border relative overflow-hidden">
         
         {/* Audio Visualizer Background when recording */}
         {isRecording && (
@@ -207,7 +207,7 @@ export function ShadowingLab({ text, onWordClick, onGrade, isGrading, feedback, 
               {[...Array(20)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="w-2 bg-red-500 rounded-full"
+                  className="w-2 bg-primary rounded-full"
                   animate={{
                     height: ["20%", "100%", "20%"],
                   }}
@@ -225,17 +225,17 @@ export function ShadowingLab({ text, onWordClick, onGrade, isGrading, feedback, 
 
         {/* Nghe giọng mẫu */}
         <div className="flex flex-col items-center gap-2 relative z-10">
-          <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider">1. Nghe giọng mẫu (Native Speaker)</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">1. Nghe giọng mẫu (Native Speaker)</p>
           <Button 
             size="lg" 
             variant={isPlayingTTS ? "default" : "secondary"}
-            className="w-64 h-14 rounded-full shadow-md font-bold text-lg" 
+            className="w-64 h-14 rounded-lg shadow-sm font-semibold text-lg" 
             onClick={toggleTTS}
           >
             {isPlayingTTS ? (
-              <><Pause className="w-6 h-6 mr-2" /> Đang phát...</>
+              <><Pause className="w-5 h-5 mr-2" /> Đang phát...</>
             ) : (
-              <><Volume2 className="w-6 h-6 mr-2" /> Nghe mẫu</>
+              <><Volume2 className="w-5 h-5 mr-2" /> Nghe mẫu</>
             )}
           </Button>
         </div>
@@ -244,26 +244,26 @@ export function ShadowingLab({ text, onWordClick, onGrade, isGrading, feedback, 
 
         {/* Luyện tập của người dùng */}
         <div className="flex flex-col items-center gap-4 w-full">
-          <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider">2. Luyện tập của bạn</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">2. Luyện tập của bạn</p>
           
           {!audioUrl ? (
             <div className="flex gap-4">
               {!isRecording ? (
                 <Button 
                   size="lg" 
-                  className="w-64 h-14 rounded-full shadow-lg font-bold text-lg bg-red-500 hover:bg-red-600 text-white transition-all"
+                  className="w-64 h-14 rounded-lg shadow-sm font-semibold text-lg bg-destructive hover:bg-destructive/90 text-destructive-foreground transition-all"
                   onClick={startRecording}
                 >
-                  <Mic className="w-6 h-6 mr-2" /> Ghi âm (Record)
+                  <Mic className="w-5 h-5 mr-2" /> Ghi âm (Record)
                 </Button>
               ) : (
                 <Button 
                   size="lg" 
                   variant="destructive"
-                  className="w-64 h-14 rounded-full shadow-lg font-bold text-lg animate-pulse"
+                  className="w-64 h-14 rounded-lg shadow-sm font-semibold text-lg animate-pulse bg-destructive/80"
                   onClick={stopRecording}
                 >
-                  <Square className="w-6 h-6 mr-2 fill-current" /> Dừng (Stop)
+                  <Square className="w-5 h-5 mr-2 fill-current" /> Dừng (Stop)
                 </Button>
               )}
             </div>
@@ -272,34 +272,34 @@ export function ShadowingLab({ text, onWordClick, onGrade, isGrading, feedback, 
               <Button 
                 size="lg" 
                 variant="default"
-                className="w-64 h-14 rounded-full shadow-md font-bold text-lg bg-green-500 hover:bg-green-600 text-white"
+                className="w-64 h-14 rounded-lg shadow-sm font-semibold text-lg bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={togglePlayRecord}
               >
                 {isPlayingRecord ? (
-                  <><Pause className="w-6 h-6 mr-2" /> Dừng phát</>
+                  <><Pause className="w-5 h-5 mr-2" /> Dừng phát</>
                 ) : (
-                  <><Play className="w-6 h-6 mr-2" /> Nghe lại giọng bạn</>
+                  <><Play className="w-5 h-5 mr-2" /> Nghe lại giọng bạn</>
                 )}
               </Button>
               <Button 
                 size="lg" 
                 variant="outline"
-                className="w-64 h-14 rounded-full shadow-sm font-bold text-lg"
+                className="w-64 h-14 rounded-lg shadow-sm font-semibold text-lg bg-background"
                 onClick={reRecord}
               >
-                <RotateCcw className="w-6 h-6 mr-2" /> Ghi âm lại
+                <RotateCcw className="w-5 h-5 mr-2" /> Ghi âm lại
               </Button>
             </div>
           )}
           
           {audioUrl && onGrade && (
             <div className="mt-4 w-full flex flex-col items-center gap-4">
-              <div className="w-full max-w-lg p-4 bg-muted/50 rounded-xl text-sm text-muted-foreground italic">
+              <div className="w-full max-w-lg p-4 bg-card rounded-lg text-sm text-muted-foreground italic border border-border">
                 <strong>Transcript:</strong> {transcript || "Không nhận diện được giọng nói."}
               </div>
               <Button 
                 size="lg" 
-                className="w-64 h-14 rounded-full shadow-lg font-bold text-lg"
+                className="w-64 h-14 rounded-lg shadow-sm font-semibold text-lg bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={() => onGrade(transcript)}
                 disabled={isGrading || !transcript}
               >
@@ -312,21 +312,21 @@ export function ShadowingLab({ text, onWordClick, onGrade, isGrading, feedback, 
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-8 w-full max-w-2xl p-6 bg-primary/5 border-2 border-primary/20 rounded-xl space-y-4 text-left"
+              className="mt-8 w-full max-w-2xl p-6 bg-card border border-border rounded-xl space-y-4 text-left"
             >
-              <div className="flex justify-between items-center border-b border-primary/10 pb-4">
-                <h3 className="text-xl font-bold font-heading text-primary">Đánh giá Phát âm (AI)</h3>
-                <Badge className="text-lg px-3 py-1 bg-primary">{feedback.score}/100</Badge>
+              <div className="flex justify-between items-center border-b border-border pb-4">
+                <h3 className="text-xl font-semibold text-primary">Đánh giá Phát âm (AI)</h3>
+                <Badge className="text-lg px-3 py-1 bg-primary text-primary-foreground">{feedback.score}/100</Badge>
               </div>
-              <p className="font-medium text-slate-800 leading-relaxed">{feedback.feedback}</p>
+              <p className="font-medium text-foreground leading-relaxed">{feedback.feedback}</p>
               {feedback.corrections && feedback.corrections.length > 0 && (
                 <div className="space-y-2 pt-2">
-                  <p className="text-sm font-bold uppercase text-muted-foreground">Lỗi phát âm & Cải thiện:</p>
+                  <p className="text-sm font-semibold uppercase text-muted-foreground">Lỗi phát âm & Cải thiện:</p>
                   <ul className="space-y-2">
                     {feedback.corrections.map((c, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm bg-white p-3 rounded-lg border shadow-sm">
-                        <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" /> 
-                        <span>{c}</span>
+                      <li key={i} className="flex items-start gap-2 text-sm bg-muted p-3 rounded-lg border border-border">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" /> 
+                        <span className="text-foreground">{c}</span>
                       </li>
                     ))}
                   </ul>

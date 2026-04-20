@@ -59,46 +59,54 @@ export function XPShop({ state, onBuy, onClose }: XPShopProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <Card className="w-full max-w-2xl shadow-2xl scale-in-center max-h-[90vh] overflow-y-auto">
-        <CardHeader className="flex flex-row items-center justify-between sticky top-0 bg-background z-10 border-b">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+      <div className="w-full max-w-3xl bg-card rounded-3xl shadow-2xl scale-in-center max-h-[90vh] overflow-hidden flex flex-col border border-border">
+        <div className="flex flex-row items-center justify-between p-6 md:p-8 bg-muted border-b border-border">
           <div>
-            <CardTitle className="text-2xl font-bold font-heading flex items-center gap-2">
-              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+            <h2 className="text-3xl font-bold font-heading flex items-center gap-3 text-foreground">
+              <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl text-amber-500">
+                <Star className="w-6 h-6 fill-amber-500" />
+              </div>
               Cửa hàng XP
-            </CardTitle>
-            <p className="text-muted-foreground mt-1">Dùng XP bạn kiếm được để đổi lấy phần thưởng!</p>
+            </h2>
+            <p className="text-muted-foreground mt-2 font-medium">Dùng XP bạn kiếm được để đổi lấy phần thưởng!</p>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant="secondary" className="text-lg px-3 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">
-              {state.xp} XP
-            </Badge>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 rounded-2xl border border-amber-200 dark:border-amber-800">
+              <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+              <span className="text-lg font-bold text-amber-700 dark:text-amber-400">{state.xp} XP</span>
+            </div>
+            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full bg-card shadow-sm hover:bg-accent text-accent-foreground">
               <X className="w-6 h-6" />
             </Button>
           </div>
-        </CardHeader>
-        <CardContent className="p-6">
+        </div>
+        <div className="p-6 md:p-8 overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {items.map(item => (
-              <div key={item.id} className="flex flex-col border-2 rounded-2xl overflow-hidden transition-all hover:border-primary/50 hover:shadow-lg">
-                <div className={`${item.color} p-6 flex items-center justify-center`}>
-                  {item.icon}
+              <div key={item.id} className="flex flex-col bg-card border border-border rounded-3xl overflow-hidden transition-all hover:border-primary/50 hover:shadow-xl hover:-translate-y-1">
+                <div className={`bg-primary/5 p-8 flex items-center justify-center relative overflow-hidden border-b border-border`}>
+                  <div className="relative z-10 transform transition-transform hover:scale-110 p-4 bg-background rounded-2xl shadow-sm border border-border text-primary">
+                    {item.icon}
+                  </div>
                 </div>
-                <div className="p-4 flex-1 flex flex-col">
-                  <h3 className="font-bold text-lg mb-1">{item.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-4 flex-1">{item.description}</p>
+                <div className="p-6 flex-1 flex flex-col">
+                  <h3 className="font-bold text-xl mb-2 text-foreground">{item.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-6 flex-1 leading-relaxed">{item.description}</p>
                   
-                  <div className="flex items-center justify-between mb-4 text-sm font-medium">
-                    <span>Đang có: {item.owned}</span>
-                    <span className="text-yellow-600 dark:text-yellow-400 font-bold flex items-center gap-1">
+                  <div className="flex items-center justify-between mb-6 p-3 bg-muted rounded-xl border border-border">
+                    <span className="text-sm font-bold text-foreground">Đang có: {item.owned}</span>
+                    <span className="text-primary font-bold flex items-center gap-1">
                       {item.cost} XP
                     </span>
                   </div>
                   
                   <Button 
-                    className="w-full font-bold" 
-                    variant={state.xp >= item.cost ? 'default' : 'secondary'}
+                    className={`w-full h-12 font-bold text-lg rounded-xl shadow-sm transition-all ${
+                      state.xp >= item.cost 
+                        ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
+                        : 'bg-muted text-muted-foreground border border-border'
+                    }`}
                     disabled={state.xp < item.cost}
                     onClick={() => handleBuy(item)}
                   >
@@ -108,8 +116,8 @@ export function XPShop({ state, onBuy, onClose }: XPShopProps) {
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

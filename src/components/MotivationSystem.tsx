@@ -58,10 +58,11 @@ export function MotivationSystem({ streak, streakShields, badges, xp, onSelectMi
 
   return (
     <div className="space-y-6">
-      <Card className="border-2 shadow-sm">
+      <Card className="border-2 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-primary/50 to-primary"></div>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-yellow-500" />
+            <Trophy className="w-5 h-5 text-primary" />
             Huy hiệu của bạn
           </CardTitle>
         </CardHeader>
@@ -92,25 +93,25 @@ export function MotivationSystem({ streak, streakShields, badges, xp, onSelectMi
       </Card>
 
       <div className="grid grid-cols-2 gap-4">
-        <Card className="border-2 shadow-sm bg-orange-50/30">
+        <Card className="border-2 shadow-sm bg-primary/5">
           <CardContent className="p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/20">
+            <div className="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-600 dark:text-orange-400 flex items-center justify-center shadow-inner">
               <Flame className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase text-orange-600/70">Streak</p>
-              <p className="text-lg font-bold font-heading">{streak} Ngày</p>
+              <p className="text-[10px] font-bold uppercase text-orange-600/70 dark:text-orange-400/70">Streak</p>
+              <p className="text-lg font-bold font-heading text-foreground">{streak} Ngày</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-2 shadow-sm bg-blue-50/30">
+        <Card className="border-2 shadow-sm bg-primary/5">
           <CardContent className="p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-inner">
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase text-blue-600/70">Shields</p>
-              <p className="text-lg font-bold font-heading">{streakShields} Active</p>
+              <p className="text-[10px] font-bold uppercase text-blue-600/70 dark:text-blue-400/70">Shields</p>
+              <p className="text-lg font-bold font-heading text-foreground">{streakShields} Active</p>
             </div>
           </CardContent>
         </Card>
